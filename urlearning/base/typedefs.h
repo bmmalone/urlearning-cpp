@@ -31,8 +31,8 @@ typedef uint8_t byte;
  *  Please note that the macro VARSET_NEW is quite sensitive.  Caveat emptor.
  *  Similarly, VARSET_COPY is very sensitive.
  */
-#define BOOST_VARSET
-//#define NATIVE_VARSET
+//#define BOOST_VARSET
+#define NATIVE_VARSET
 
 /**
  *  Decide how to handle dynamic bitsets (i.e., for sparse parent graphs).
@@ -149,6 +149,10 @@ inline long differenceBetweenVarsets(varset first, varset second){
 inline byte cardinality(varset &vs) {
     return vs.count();
 }
+
+/**
+ * Taken from https://graphics.stanford.edu/~seander/bithacks.html#NextBitPermutation
+ */
 inline varset nextPermutation(varset &vs) {
     unsigned long variables = vs.to_ulong();
     unsigned long temp = (variables | (variables - 1)) + 1;
@@ -236,6 +240,10 @@ inline bool firstNBitsEqual(varset first, varset second, int n) {
     unsigned mask = ((1 << n)-1);
     return (first & mask)==(second & mask);
 }
+
+/**
+ * Taken from https://graphics.stanford.edu/~seander/bithacks.html#NextBitPermutation
+ */
 inline varset nextPermutation(varset &vs) {
     varset nextVariables; // next permutation of bits
     varset temp = (vs | (vs - 1)) + 1;
