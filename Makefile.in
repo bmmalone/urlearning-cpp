@@ -28,9 +28,10 @@ uninstall:
 	
 install:
 	-@for PROGRAM in $(PROGRAMS) ; do \
-		(test -s $(BAZELBIN)$(subst -,_,$$PROGRAM)/$$PROGRAM && \
+		PROGRAMU=`echo $$PROGRAM | tr - _` ; \
+		(test -s $(BAZELBIN)$$PROGRAMU/$$PROGRAM && \
 		echo Copying $$PROGRAM to $(DESTDIR)$(PREFIX)/bin/ && \
-		cp $(BAZELBIN)$(subst -,_,$$PROGRAM)/$$PROGRAM $(DESTDIR)$(PREFIX)/bin/ && \
+		cp $(BAZELBIN)$$PROGRAMU/$$PROGRAM $(DESTDIR)$(PREFIX)/bin/ && \
 		chmod 755 $(DESTDIR)$(PREFIX)/bin/$$PROGRAM) || true ; \
 	done
 
