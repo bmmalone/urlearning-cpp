@@ -6,13 +6,16 @@
 PROGRAMS = anytime-window-astar astar bfbnb bfbnb-hash score
 BAZELBIN = bazel-bin/urlearning/
 
-.PHONY: all clean install uninstall $(PROGRAMS)
+.PHONY: all clean distclean install uninstall $(PROGRAMS)
 
 all: $(PROGRAMS)
 
 clean:
 	bazel clean
 	
+distclean: clean
+	rm -f Makefile
+
 $(PROGRAMS):
 	bazel build $(DBG) urlearning/$(subst -,_,$@)/$@
 	
