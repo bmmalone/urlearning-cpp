@@ -1,4 +1,4 @@
-.PHONY: all clean
+.PHONY: all clean astar astar-debug bfbnb bfbnb-debug score score-debug bfbnb-hash bfbnb-hash-debug
 
 all: score astar bfbnb bfbnb-hash
 
