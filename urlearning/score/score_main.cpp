@@ -214,9 +214,9 @@ int main(int argc, char** argv) {
 
     po::notify(vm);
 
-    hasHeader = vm.count("hasHeader");
-    prune = (vm.count("doNotPrune") == 0);
-    enableDeCamposPruning = vm.count("enableDeCamposPruning");
+    hasHeader = vm.count("has-header");
+    prune = (vm.count("do-not-prune") == 0);
+    enableDeCamposPruning = vm.count("enable-de-campos-pruning");
 
     if (threadCount < 1) {
         threadCount = 1;
