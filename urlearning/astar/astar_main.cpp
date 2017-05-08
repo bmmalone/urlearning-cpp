@@ -433,14 +433,14 @@ int main(int argc, char** argv) {
     po::options_description desc(description);
 
     desc.add_options()
-            ("scoreFile", po::value<std::string > (&scoreFile)->required(), "The file containing the local scores in pss format. First positional argument.")
-            ("bestScore,b", po::value<std::string > (&bestScoreCalculator)->default_value("list"), bestscorecalculators::bestScoreCalculatorString.c_str())
+            ("score-file", po::value<std::string > (&scoreFile)->required(), "The file containing the local scores in pss format. First positional argument.")
+            ("best-score,b", po::value<std::string > (&bestScoreCalculator)->default_value("list"), bestscorecalculators::bestScoreCalculatorString.c_str())
             ("heuristic,e", po::value<std::string > (&heuristicType)->default_value("static"), heuristics::heuristicTypeString.c_str())
             ("argument,a", po::value<std::string > (&heuristicArgument)->default_value("2"), heuristics::heuristicArgumentString.c_str())
             ("pc_{i-1},p", po::value<std::string > (&ancestorsArgument)->default_value(""), "Variables which can only be used as ancestors. They will not be added in the search. CSV-list of variable indices. See UAI '14.")
             ("scc_i,s", po::value<std::string > (&sccArgument)->default_value(""), "Variables which will be added in the search. CSV-list of variable indices. Leave blank to add all variables. See UAI '14.")
-            ("runningTime,r", po::value<int> (&runningTime)->default_value(0), "The maximum running time for the algorithm.  0 means no running time.")
-            ("netFile,n", po::value<std::string > (&netFile)->default_value(""), "The file to which the learned network is written.  Leave blank to not create the file.")
+            ("running-time,r", po::value<int> (&runningTime)->default_value(0), "The maximum running time for the algorithm.  0 means no running time.")
+            ("net-file,n", po::value<std::string > (&netFile)->default_value(""), "The file to which the learned network is written.  Leave blank to not create the file.")
             ("help,h", "Show this help message.")
             ;
 
