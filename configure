@@ -1,0 +1,34 @@
+#!/bin/sh
+
+###
+#   This script is adapted from http://nuclear.mutantstargoat.com/articles/make
+###
+
+PREFIX=/usr/local
+DEBUG=
+
+for arg in "$@"; do
+    case "$arg" in
+    --prefix=*)
+        PREFIX=`echo $arg | sed 's/--prefix=//'`
+        ;;
+
+    --enable-debug)
+        DEBUG= -c dbg;;
+    
+    --help)
+        echo 'usage: ./configure [options]'
+        echo 'options:'
+        echo '  --prefix=<path>: installation prefix'
+        echo '  --enable-debug: include debug symbols'
+        echo 'all invalid options are silently ignored'
+        exit 0
+        ;;
+    esac
+done
+
+echo 'generating makefile ...'
+echo "PREFIX = $PREFIX" >Makefile
+echo "DEBUG = $DEBUG" >>Makefile
+cat Makefile.in >>Makefile
+echo 'configuration complete, type make to build.'

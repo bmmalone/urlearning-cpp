@@ -1,5 +1,5 @@
 # Change Log
-All notable changes to urlearning will be documented in this file.
+All notable changes to URLearning will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/), 
 and this project adheres to [Semantic Versioning](http://semver.org/).

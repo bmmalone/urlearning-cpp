@@ -1,5 +1,5 @@
 cc_binary(
-    name = "anytime_window_astar",
+    name = "anytime-window-astar",
     srcs = [
         "anytime_window_astar_main.cpp"
     ],

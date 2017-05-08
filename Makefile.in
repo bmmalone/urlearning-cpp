@@ -1,0 +1,33 @@
+
+# the configure script will add PREFIX and DBG, but here are examples
+#PREFIX = /usr/local
+#DBG = -c dbg
+#DBG = 
+PROGRAMS = anytime-window-astar astar bfbnb bfbnb-hash score
+BAZELBIN = bazel-bin/urlearning/
+
+.PHONY: all clean install uninstall $(PROGRAMS)
+
+all: $(PROGRAMS)
+
+clean:
+	bazel clean
+	
+$(PROGRAMS):
+	bazel build $(DBG) urlearning/$(subst -,_,$@)/$@
+	
+uninstall:
+	-@for PROGRAM in $(PROGRAMS) ; do \
+		(test -s $(DESTDIR)$(PREFIX)/bin/$$PROGRAM && \
+		echo Removing $$PROGRAM from $(DESTDIR)$(PREFIX)/bin/ && \
+		rm -f $(DESTDIR)$(PREFIX)/bin/$$PROGRAM) || true ; \
+	done
+	
+install:
+	-@for PROGRAM in $(PROGRAMS) ; do \
+		(test -s $(BAZELBIN)$(subst -,_,$$PROGRAM)/$$PROGRAM && \
+		echo Copying $$PROGRAM to $(DESTDIR)$(PREFIX)/bin/ && \
+		cp $(BAZELBIN)$(subst -,_,$$PROGRAM)/$$PROGRAM $(DESTDIR)$(PREFIX)/bin/ && \
+		chmod 755 $(DESTDIR)$(PREFIX)/bin/$$PROGRAM) || true ; \
+	done
+
