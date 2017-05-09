@@ -10,6 +10,8 @@
 
 #include "urlearning/base/typedefs.h"
 #include "score_cache.h"
+#include <vector>
+
 
 namespace bestscorecalculators {
     
@@ -25,6 +27,8 @@ namespace bestscorecalculators {
         virtual void print() = 0;
     };
     
+
+    typedef std::vector<BestScoreCalculator*> best_score_calculators;
 }
 
 
