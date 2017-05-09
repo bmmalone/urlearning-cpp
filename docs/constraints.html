@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="constraints-for-candidate-parent-sets">Constraints for candidate parent sets</h1>
+<p>The <a href="usage.html#local-score-calculations"><code>score</code></a> can accept a simple text file which specifies constraints on the allowed candidate parent sets for each variable. The constraints are specified in disjunctive normal form (an “OR” of “AND”s); so, for each variable, a valid candidate parent set must satisfy only one of the specified constraints. (Note that if conjuctive normal form were allowed, then checking each possible candidate parent set entails solving SAT.)</p>
+<p>The constraints are specified in the following format.</p>
+<ul>
+<li><p>Blank lines are allowed.</p></li>
+<li><p>The hash (“<code>#</code>”) begins comments. Everything on the rest of the line is ignored.</p></li>
+<li><p>Each non-blank line contains constraints for one of the variables and is specified as follows.</p>
+<pre><code>line := &lt;variable_name&gt; [&lt;constraint&gt;]+
+&lt;variable_name&gt; := string
+&lt;constraint&gt; := ( &lt;par&gt;+ )
+&lt;par&gt; := [!]&lt;parent&gt;
+&lt;parent&gt; := string</code></pre></li>
+</ul>
+<p>In the specification, <code>&lt;variable_name&gt;</code> and <code>&lt;parent&gt;</code> are both strings which match one of the variable names in the input csv file. An exclamation mark (<code>!</code>) before a parent name indicates it is forbidden for that constraint; otherwise, the parent is required. No space should occur between the exclamation mark and the parent name. A space <em>must</em> occur after each parent name.</p>
+<h2 id="example">Example</h2>
+<p>The following example shows constraints for the iris dataset distributed with the source code.</p>
+<pre><code># variable names: SepalLength,SepalWidth,PetalLength,PetalWidth,Class
+Class ( !PetalWidth PetalLength ) # constraints for Class variable
+PetalWidth ( !SepalWidth )
+SepalLength ( !PetalLength !Class ) ( SepalWidth )</code></pre>
+<p>The interpretation is as follows. (Again, recall that a candidate parent set must satisfy <em>only one</em> of the constraints.)</p>
+<ul>
+<li><p>No candidate parent set for <code>Class</code> can include <code>PetalWidth</code>, and they must all include <code>PetalLength</code>.</p></li>
+<li><p>No candidate parent set for <code>PetalWidth</code> can include <code>SepalWidth</code>.</p></li>
+<li>The candidate parent sets for <code>SepalLength</code> must either:
+<ul>
+<li>Include neither <code>PetalLength</code> nor <code>Class</code> <em>or</em></li>
+<li>Include <code>SepalWidth</code></li>
+</ul></li>
+</ul>
+<p>For example, the candidate parent set <code>{Class, SepalWidth}</code> is valid for <code>SepalLength</code> because it satisfies the second constraint (even though it violates the first one); however, the candidate parent set <code>{Class, PetalWidth}</code> <em>is not</em> valid for <code>SepalLength</code> because it satisfies neither of the constraints.</p>
+<h2 id="de-campos-style-pruning">de Campos-style pruning</h2>
+<p>In principle, there is no problem combining these constraints with pruning during local score calculations. In essence, subsets which do not satisfy any of the constraints cannot be use to prune supersets.</p>
+<p>This has not been thoroughly tested, though, so if problems arise, please create an issue on <a href="https://github.com/bmmalone/urlearning-cpp/issues">GitHub</a>.</p>
+</body>
+</html>
