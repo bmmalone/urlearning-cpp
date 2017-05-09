@@ -182,19 +182,49 @@ int main(int argc, char** argv) {
     po::options_description desc(description);
 
     desc.add_options()
-            ("input", po::value<std::string > (&inputFile)->required(), "The input file. First positional argument.")
-            ("output", po::value<std::string > (&outputFile)->required(), "The output file. Second positional argument.")
-            ("delimiter,d", po::value<char> (&delimiter)->required()->default_value(','), "The delimiter of the input file.")
-            ("constraints,c", po::value<std::string > (&constraintsFile), "The file specifying constraints on the scores.")
-            ("r-min,m", po::value<int> (&rMin)->default_value(5), "The minimum number of records in the AD-tree nodes.")
-            ("function,f", po::value<std::string > (&sf)->default_value("BIC"), "The scoring function to use.")
-            ("ess,e", po::value<float> (&equivalentSampleSize)->default_value(1.0f), "The equivalent sample size, if BDeu is used.")
-            ("max-parents,p", po::value<int> (&maxParents)->default_value(0), "The maximum number of parents for any variable. A value less than 1 means no limit.")
-            ("threads,t", po::value<int> (&threadCount)->default_value(1), "The number of separate threads to use for score calculations.")
-            ("time,r", po::value<int> (&runningTime)->default_value(-1), "The maximum amount of time to use for each variable. A value less than 1 means no limit.")
-            ("has-header,s", "Add this flag if the first line of the input file gives the variable names.")
-            ("do-not-prune,o", "Add this flag if the scores should NOT be pruned at the end of the search.")
-            ("enable-de-campos-pruning", "Add this flag to ENABLE DeCampos & Ji (JMLR 2011) pruning for BDeu. This feature is experimental and appears to contain some bugs for sufficiently large parent limits for BDeu. This flag has no effect for BIC or fNML.")
+            ("input",
+            	po::value<std::string > (&inputFile)->required(),
+				"The input file. First positional argument.")
+            ("output",
+            	po::value<std::string > (&outputFile)->required(),
+				"The output file. Second positional argument.")
+			("constraints,c",
+				po::value<std::string > (&constraintsFile),
+				"The file specifying constraints on the scores.")
+            ("delimiter,d",
+            	po::value<char> (&delimiter)->required()->default_value(','),
+				"The delimiter of the input file.")
+			("has-header,s",
+				"Add this flag if the first line of the input file gives the "
+				"variable names.")
+            ("r-min,m",
+            	po::value<int> (&rMin)->default_value(5),
+				"The minimum number of records in the AD-tree nodes.")
+            ("function,f",
+            	po::value<std::string > (&sf)->default_value("BIC"),
+				"The scoring function to use. Choices: BIC, BDeu, fNML")
+            ("ess,e",
+            	po::value<float> (&equivalentSampleSize)->default_value(1.0f),
+				"The equivalent sample size, if BDeu is used.")
+            ("max-parents,p",
+            	po::value<int> (&maxParents)->default_value(0),
+				"The maximum number of parents for any variable. A value less "
+				"than 1 means no limit.")
+			("enable-de-campos-pruning",
+				"Add this flag to ENABLE DeCampos & Ji (JMLR 2011) pruning. "
+				"This feature is experimental (unpublished) for fNML and "
+				"appears to contain some bugs for sufficiently large parent "
+				"limits for BDeu.")
+			("do-not-prune,o",
+				"Add this flag if the scores should NOT be pruned at the end "
+				"of the search.")
+            ("threads,t",
+            	po::value<int> (&threadCount)->default_value(1),
+				"The number of threads to use for score calculations.")
+            ("time,r",
+            	po::value<int> (&runningTime)->default_value(-1),
+				"The maximum amount of time to use for each variable. A value "
+				"less than 1 means no limit.")
             ("help,h", "Show this help message.")
             ;
 
@@ -258,7 +288,9 @@ int main(int argc, char** argv) {
 
     if (sf.compare("bic") == 0) {
         int maxParentCount = log(2 * recordFile.size() / log(recordFile.size()));
-        if (maxParentCount < maxParents) {
+
+        // do not update the parent limit if we specified not to prune
+        if ((maxParentCount < maxParents) && (prune)) {
             maxParents = maxParentCount;
         }
     } else if (sf.compare("fnml") == 0) {
