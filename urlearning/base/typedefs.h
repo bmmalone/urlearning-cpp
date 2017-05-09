@@ -77,6 +77,7 @@ typedef boost::dynamic_bitset<> varset;
 #define VARSET_NOT(vs) (varset(vs).flip()) // TODO use of this in static_pattern_database requires a copy here, not efficient overall
 #define VARSET_AND(vs, other) (vs & other)
 #define VARSET_OR(vs, other) (vs |= other)
+#define VARSET_XOR(vs, other) (vs ^ other)
 #define VARSET_COPY(vs, other) varset other(vs)
 #define VARSET_EQUAL(vs, other) (varsetsEqual(vs,other))
 #define VARSET_TO_LONG(vs) vs.to_ulong()
@@ -216,6 +217,7 @@ typedef uint64_t varset;
 #define VARSET_NOT(vs) (~vs)
 #define VARSET_AND(vs, other) (vs & other)
 #define VARSET_OR(vs, other) (vs | other)
+#define VARSET_XOR(vs, other) (vs ^ other)
 #define VARSET_COPY(vs, other) varset other(vs)
 #define VARSET_EQUAL(vs, other) (vs == other)
 #define VARSET_TO_LONG(vs) vs
