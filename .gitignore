@@ -5,3 +5,6 @@ bazel-testlogs
 bazel-urlearning-cpp
 
 Makefile
+
+*aux
+*log

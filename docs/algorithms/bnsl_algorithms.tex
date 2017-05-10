@@ -1,0 +1,143 @@
+\documentclass[a4paper,10pt]{article}
+
+% colored text
+\usepackage{color}
+
+% include eps, pdf graphics
+\usepackage{graphicx}
+
+% use "H" for floats
+\usepackage{float}
+
+% avoid "too many unprocessed floats" error
+\usepackage{morefloats}
+
+% FloatBarrier to ensure figures do not jump to different sections
+\usepackage{placeins}
+
+% properly handle spaces after defines
+\usepackage{xspace}
+
+% in case we need to span rows in our tables
+\usepackage{multirow}
+
+% tables across multiple pages
+\usepackage{ltablex}
+
+% nice-looking tables
+\usepackage{booktabs}
+
+% easy centering for tables
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+% math
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{amsmath,amsthm,amssymb}
+
+% more math
+\newcommand*{\defeq}{\mathrel{\vcenter{\baselineskip0.5ex \lineskiplimit0pt
+                     \hbox{\scriptsize.}\hbox{\scriptsize.}}}%
+                     =}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newcommand{\BigO}[1]{\ensuremath{\operatorname{O}\left(#1\right)}}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+
+% mono (\|), bold (\!) and fancy (\*) letters
+\def\|#1{\ensuremath{\mathtt{#1}}}
+\def\!#1{\ensuremath{\mathbf{#1}}}
+\def\*#1{\ensuremath{\mathcal{#1}}}
+
+\newcommand\todo[1]{\textcolor{red}{[TODO: #1]}}
+
+% custom commands
+\newcommand\uprime{\ensuremath{\!U^{\prime}}\xspace}
+\newcommand\Astar{A$^{*}$\xspace}
+
+\title{Pseudocode for URLearning algorithms}
+\author{Brandon Malone}
+
+\begin{document}
+
+
+\maketitle
+
+\begin{abstract}
+This document describes the algorithms implemented in the URLearning software
+package. The document \emph{does not} necessarily describe the inner behavior
+of the solvers, which often contain optimizations to improve performance.
+\end{abstract}
+
+\section{\Astar Search Algorithm}
+
+The \Astar search algorithm uses a best-first expansion policy to explore the
+order graph. Algorithm~\ref{alg:astar} gives a high-level overview of this
+search strategy. The primary operations are (immediate) duplicate detection
+and maintaining the priority queue.
+
+In practice, the \|{contains} operations are implemented using a single hash
+table which contains all generated nodes. Flags indicate whether the nodes
+are in the $open$ or $closed$ lists.
+
+Further, (pointers to) nodes in the $open$ list are also maintained in a
+priority queue, which is implemented on top of a standard heap. The \|{update}
+operation leverages the observation that node priorities only ever improve; if
+a duplicate is worse, it is simply ignored.
+
+\begin{algorithm}[]
+\caption{\Astar Search Algorithm}
+\begin{algorithmic}[0]
+%\Require full or 
+%\Ensure an optimal Bayesian network $G$
+
+\Function {astar}{{\small sparse parent graphs with $BestScore(\cdot)$, 
+        admissible heuristic $h$}}
+
+    \State $start \leftarrow \emptyset$
+    \State $Score(start) \leftarrow 0$
+    \State push($open, start, h(start)$
+
+    \While {len($open$) $> 0$}
+        \State $\!U \leftarrow $pop($open$)
+	\If {\!U is goal} \Comment{A shortest path is found}
+            \State $\*N^{*} \leftarrow$ construct a network from the shortest path
+	    \State \Return $\*N^{*}$
+        \EndIf
+
+        \State put($closed, \!U$)
+
+	\For {each $X \in \!V \setminus \!U$} \Comment{Generate successors}
+            \State $\uprime \leftarrow {\bf U} \cup \{X\}$
+	    \State $g \leftarrow BestScore(X, {\bf U}) + Score({\bf U})$
+%			
+	    \If {contains($closed, \uprime $)} \Comment{Closed list DD}
+                \If{$g< Score(\uprime)$} \Comment{reopen node}
+                    \State remove($closed, \uprime$)
+                    \State push ($open, \uprime, g + h(\uprime)$)
+                    \State $Score(\uprime) \leftarrow g$
+                \EndIf
+            \ElsIf {contains($open, \uprime $)} \Comment{Open list DD}
+                \If{$g< Score(\uprime)$} \Comment{better path}
+                    \State update($open, \uprime, g + h(\uprime)$)
+                    \State $Score(\uprime) \leftarrow g$
+                \EndIf
+            \Else \Comment{New node}
+                \State push ($open, \uprime, g + h(\uprime)$)
+                \State $Score(\uprime) \leftarrow g$
+            \EndIf
+        \EndFor
+
+    \EndWhile
+\EndFunction
+
+\end{algorithmic}
+\label{alg:astar}
+\end{algorithm}
+
+
+\end{document}
