@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="specifying-pattern-databases-in-files">Specifying pattern databases in files</h1>
+<p>In previous work [Fan et al., AAAI 2014; Fan and Yuan, AAAI 2015], we have described strategies for finding good groupings of variables for the pattern databases. These groupings can be given to the various solvers via a file describing all desired pattern databases.</p>
+<p>When multiple pattern databases are specified, the bound is calculated according to all of them; the minimum is used for the h estimate for the node.</p>
+<h2 id="format">Format</h2>
+<p>The (line-based) format of the file is as follows.</p>
+<ul>
+<li><p>Blank lines are allowed.</p></li>
+<li><p>The hash (“<code>#</code>”) begins comments. Everything on the rest of the line is ignored.</p></li>
+<li><p>Each non-blank line specifies one pattern database as follows.</p></li>
+</ul>
+<pre><code>line := &lt;database_type&gt;;&lt;parameters&gt;
+&lt;database_type&gt; := s|d
+&lt;parameters&gt; := &lt;static_parameters&gt;|&lt;dynamic_parameters&gt;
+&lt;dynamic_parameters&gt; := int
+&lt;static_parameters&gt; := [&lt;pattern&gt;;]*[&lt;pattern&gt;]
+&lt;pattern&gt; := [int,]*[int]</code></pre>
+<h2 id="example">Example</h2>
+<p>The following example specifies three pattern databases for use with the iris dataset. The first line (<code>d;2</code>) indicates that a dynamic pattern database with <code>k=2</code> should be created. The second line (<code>s;0,2,3;1,4</code>) indicates that a static pattern database with two grouping (variables <code>{0,2,3}</code> as the first group and <code>{1,4}</code> as the second) should also be created. The third line specifies another static pattern database with groups <code>{0,4}</code> and <code>{1,2,3}</code>.</p>
+<pre><code># file pattern database for iris
+
+d;2 # a dynamic pd
+s;0,2,3;1,4 # a static pd
+s;0,4;1,2,3 # another static pd</code></pre>
+<h2 id="semantics">Semantics</h2>
+<p>As the format and example above shows, the file allows specification of both static and dynamic pattern databases (please see [Yuan and Malone, UAI 2012] for more details).</p>
+<ul>
+<li><p>Dynamic pattern databases</p>
+<p>In the case of dynamic pattern databases, the only parameter is <code>k</code>, the size of the patterns. Experimental results suggest that values in the range of 2 to 4 or 5 are reasonable; larger patterns significantly increase the time to construct the pattern database and do not typically show improvement during the search.</p></li>
+<li><p>Static pattern databases</p>
+<p>Static pattern databases require the groupings of the variables. These are given as comma-separated lists separated by semicolons. Currently, the variable <em>indices</em> must be given; the variable <em>names</em> will not work. Please see <a href="https://github.com/bmmalone/urlearning-cpp/issues/22">Issue #22</a> for updates about this behavior. The variable indices are 0-based and exactly match the order of the variables in the input CSV file for calculating scores.</p></li>
+</ul>
+<h2 id="caution">CAUTION</h2>
+<p>Currently, the validation of the file is quite limited; error checking is very limited and will cause the solver to crash. Similarly, the semantics of the file are not validated. In particular, the code does not currently validate that each variable occurs in exactly one of the groups of a static pattern database.</p>
+<p>Thus, extreme care should be used with the file pattern databases. Please follow <a href="https://github.com/bmmalone/urlearning-cpp/issues/23">Issue #23</a> for updates about semantic validation.</p>
+</body>
+</html>
