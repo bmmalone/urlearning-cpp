@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE SIMPLEST_TEST_SUITE
 #include <boost/test/unit_test.hpp>
-#include "typedefs.h"
+#include "urlearning/base/typedefs.h"
 #include <cmath>
 
 #ifdef BOOST_VARSET
