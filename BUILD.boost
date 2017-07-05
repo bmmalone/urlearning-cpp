@@ -1,3 +1,10 @@
+###
+# This file is mildly adapted from the version in this repo:
+#   https://github.com/nelhage/rules_boost
+###
+
+
+
 load("@//:boost.bzl", "boost_library")
 
 boost_library(

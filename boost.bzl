@@ -1,3 +1,8 @@
+###
+# This file is mildly adapted from the version in this repo:
+#   https://github.com/nelhage/rules_boost
+###
+
 include_pattern = "boost/%s/"
 hdrs_patterns = [
   "boost/%s.h",
